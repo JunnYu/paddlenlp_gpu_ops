@@ -278,7 +278,7 @@ def write_custom_op_api_py(libname, filename):
 
 
 VERSION = "0.0.1.dev0"  # expected format is one of x.y.z.dev0, or x.y.z.rc1 or x.y.z (no to dashes, yes to dots)
-if sys.argv[1] != "deps_table_update":
+if len(sys.argv) > 0 and "deps_table_update" not in sys.argv:
     # generate lib files
     lib_path = Path("src/paddlenlp_gpu_ops/cuda/lib")
     if lib_path.exists():
