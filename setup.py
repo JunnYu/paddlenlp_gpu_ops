@@ -205,23 +205,6 @@ version_range_max = max(sys.version_info[1], 10) + 1
 
 
 # NEW ADDED START
-def update_version(version, filename="src/paddlenlp_gpu_ops/__init__.py"):
-    if os.path.exists(filename):
-        with open(filename, "r", encoding="utf-8") as fr:
-            content = fr.read()
-    else:
-        content = ""
-    import re
-
-    version_pattern = r"__version__ = '[^']*'"
-    if re.search(version_pattern, content):
-        new_content = re.sub(version_pattern, f"__version__ = '{version}'", content)
-    else:
-        new_content = f"__version__ = '{version}'\n" + content
-    with open(filename, "w", encoding="utf-8") as fw:
-        fw.write(new_content)
-
-
 def write_custom_op_api_py(libname, filename):
     import paddle
 
@@ -277,7 +260,6 @@ def write_custom_op_api_py(libname, filename):
         f.write(_stub_template.format(resource=os.path.basename(libname), custom_api="\n\n".join(api_content)))
 
 
-VERSION = "0.0.1.dev0"  # expected format is one of x.y.z.dev0, or x.y.z.rc1 or x.y.z (no to dashes, yes to dots)
 if len(sys.argv) > 0 and "deps_table_update" not in sys.argv:
     # generate lib files
     lib_path = Path("src/paddlenlp_gpu_ops/cuda/lib")
@@ -296,13 +278,11 @@ if len(sys.argv) > 0 and "deps_table_update" not in sys.argv:
 
     if not has_built:
         raise RuntimeError("No cuda lib found. Please build cuda lib first. See details in csrc/README.md")
-    update_version(VERSION)
 
 # NEW ADDED END
-
 setup(
     name="paddlenlp_gpu_ops",
-    version=VERSION,
+    version="0.1.0.dev0",  # expected format is one of x.y.z.dev0, or x.y.z.rc1 or x.y.z (no to dashes, yes to dots)
     description="PaddleNLP GPU OPS cuda & triton.",
     long_description=open("README.md", "r", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
