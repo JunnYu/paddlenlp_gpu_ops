@@ -206,6 +206,8 @@ version_range_max = max(sys.version_info[1], 10) + 1
 
 # NEW ADDED START
 def write_custom_op_api_py(libname, filename):
+    libname = str(libname)
+    filename = str(filename)
     import paddle
 
     op_names = paddle.utils.cpp_extension.extension_utils.load_op_meta_info_and_register_op(libname)
@@ -256,7 +258,7 @@ def write_custom_op_api_py(libname, filename):
         """
     ).lstrip()
 
-    with open(filename, "w") as f:
+    with open(filename, "w", encoding="utf-8") as f:
         f.write(_stub_template.format(resource=os.path.basename(libname), custom_api="\n\n".join(api_content)))
 
 
@@ -270,10 +272,14 @@ if len(sys.argv) > 0 and "deps_table_update" not in sys.argv:
     has_built = False
     for so_file in Path("csrc").glob("**/*.so"):
         so_filename = so_file.name
+        # so file
         new_so_filename = so_filename.replace(".so", "_pd.so")
+        new_so_file = lib_path / new_so_filename
+        # py file
         py_filename = so_filename.replace(".so", ".py")
-        shutil.copyfile(str(so_file), lib_path / new_so_filename)
-        write_custom_op_api_py(str(so_file), lib_path.parent / py_filename)
+        new_py_file = lib_path.parent / py_filename
+        shutil.copyfile(so_file, new_so_file)
+        write_custom_op_api_py(new_so_file, new_py_file)
         has_built = True
 
     if not has_built:
