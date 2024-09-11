@@ -240,12 +240,12 @@ class KLDivLossFunction(paddle.autograd.PyLayer):
         """A backward pass for the KL Divergence Loss.
 
         Args:
-            ctx: Torch autograd context
-            grad_output (torch.Tensor): The gradient of the loss with respect to the output.
+            ctx: Paddle autograd context
+            grad_output (paddle.Tensor): The gradient of the loss with respect to the output.
 
         Returns:
-            tuple[torch.Tensor, None, None, None]: The gradient of the loss with respect to the inputs and None for the
-            other arguments of the forward method.
+            tuple[paddle.Tensor, None, None, None]: The gradient of the loss with respect to the inputs and None for
+            the other arguments of the forward method.
         """
         y_pred, y_true = ctx.saved_tensor()
 

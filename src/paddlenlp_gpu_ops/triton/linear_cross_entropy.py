@@ -831,8 +831,8 @@ class LinearXentImplementation(paddle.autograd.PyLayer):
         return lse_sum + losses.sum(), z_reg_value, logit_max, logit_ent, logit_norm
 
     @staticmethod
-    # @torch.amp.custom_bwd(device_type="cuda")
-    # @torch.inference_mode()
+    # @paddle.amp.custom_bwd(device_type="cuda")
+    # @paddle.inference_mode()
     @custom_bwd
     @paddle.no_grad()
     def backward(ctx, grad_output, void0, void1, void2, void3):
@@ -851,7 +851,7 @@ def linear_cross_entropy(
     logit_scale: float = 1.0,
     N_chunk_size: int = 4096,
     monitoring: bool = False,
-) -> tuple[paddle.Tensor, paddle.Tensor, paddle.Tensor, paddle.Tensor, paddle.Tensor]:
+):
     return LinearXentImplementation.apply(
         x, y, At, ignore_index, z_regularization, logit_scale, N_chunk_size, monitoring
     )  # type: ignore

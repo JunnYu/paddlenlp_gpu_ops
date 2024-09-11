@@ -48,10 +48,24 @@ def get_sm_version():
     return cc
 
 
-def run(func):
+def run_single(func):
     p = multiprocessing.Process(target=func)
     p.start()
     p.join()
+
+
+def run_multi(func_list):
+    processes = []
+    for func in func_list:
+        processes.append(multiprocessing.Process(target=func))
+        processes.append(multiprocessing.Process(target=func))
+        processes.append(multiprocessing.Process(target=func))
+
+    for p in processes:
+        p.start()
+
+    for p in processes:
+        p.join()
 
 
 cc_flag = get_gencode_flags(compiled_all=False)
@@ -291,8 +305,12 @@ def setup_selective_scan():
 
 
 if __name__ == "__main__":
-    run(setup_fast_ln)
-    run(setup_fused_ln)
-    run(setup_paddlenlp_ops)
-    run(setup_causal_conv1d)
-    run(setup_selective_scan)
+    run_multi(
+        [
+            setup_fast_ln,
+            setup_fused_ln,
+            setup_paddlenlp_ops,
+            setup_causal_conv1d,
+            setup_selective_scan,
+        ],
+    )

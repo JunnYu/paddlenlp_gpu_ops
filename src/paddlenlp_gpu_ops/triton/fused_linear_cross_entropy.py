@@ -108,14 +108,12 @@ def fused_linear_cross_entropy_forward(_input, weight, target, bias=None, ignore
         )
 
         if bias is not None:
-            import torch
-
             grad_bias = paddle.add(
                 x=grad_bias,
                 y=logits_chunk.sum(axis=0) * n_non_ignore / total_n_non_ignore,
             )
 
-    loss = torch.sum(loss_1d) / total_n_non_ignore
+    loss = paddle.sum(loss_1d) / total_n_non_ignore
     return loss, grad_input, grad_weight, grad_bias
 
 
